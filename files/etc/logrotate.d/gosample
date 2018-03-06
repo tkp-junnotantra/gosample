@@ -5,6 +5,7 @@
   compress
   su root www-data
   postrotate
+    sleep 3
     reload toko-gosample >/dev/null 2>&1 || true
   endscript
 }
