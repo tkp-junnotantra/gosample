@@ -2,13 +2,16 @@ package main
 
 import (
 	"flag"
-	"github.com/google/gops/agent"
 	"log"
 	"net/http"
 
+	"github.com/google/gops/agent"
+
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
+	seapi "github.com/tokopedia/gosample/api"
 	"github.com/tokopedia/gosample/hello"
+	"github.com/tokopedia/gosample/setrg"
 	"github.com/tokopedia/logging/tracer"
 	"gopkg.in/tokopedia/grace.v1"
 	"gopkg.in/tokopedia/logging.v1"
@@ -28,10 +31,18 @@ func main() {
 	}
 
 	hwm := hello.NewHelloWorldModule()
+	stm := setrg.NewSetrgModule()
 
 	http.Handle("/metrics", promhttp.Handler())
 
 	http.HandleFunc("/hello", hwm.SayHelloWorld)
+
+	http.HandleFunc("/manusia-ganjil", stm.ManusiaGanjil)
+
+	http.HandleFunc("/programmer-muda", stm.ProgrammerMuda)
+
+	http.HandleFunc("/api/post", seapi.HandlePost)
+
 	go logging.StatsLog()
 
 	tracer.Init(&tracer.Config{Port: 8700, Enabled: true})
